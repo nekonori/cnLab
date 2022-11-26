@@ -5,24 +5,32 @@ public class Server {
     private static DataOutputStream dos;
     private static DataInputStream dis;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ServerSocket ss = new ServerSocket(5050);
         Socket client = ss.accept();
+        System.out.println("Connected to client");
         dos = new DataOutputStream(client.getOutputStream());
         dis = new DataInputStream(client.getInputStream());
-        String fileName = dis.readUTF();
         long fileSize = dis.readLong();
+        String fileName = dis.readUTF();
         receiveFile(fileName, fileSize);
         dis.close();
         dos.close();
         ss.close();
     }
 
-    static void receiveFile(String fileName, long fileSize){
+    static void receiveFile(String fileName, long fileSize) throws Exception {
         int bytes = 0;
         FileOutputStream fos = new FileOutputStream(fileName);
         byte[] buffer = new byte[4 * 1024];
-        int bytes = 0;
-        while (fileSize > 0 && (bytes = dis.read(fos, 0, bytes)))
+        while (fileSize > 0 &&
+                (bytes = dis.read(
+                        buffer, 0,
+                        (int) Math.min(buffer.length, fileSize))) != 1) {
+            fos.write(buffer, 0, bytes);
+            fileSize -= bytes;
+        }
+        System.out.println("Received " + fileName);
+        fos.close();
     }
 }
