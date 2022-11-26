@@ -1,3 +1,6 @@
+
+// to run execute the following command
+// javac -cp ".;javax.mail.jar;activation-1.1.1.jar" SMTP.java && java -cp ".;javax.mail.jar;activation-1.1.1.jar" SMTP
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
