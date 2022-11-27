@@ -6,20 +6,24 @@ import javax.mail.*;
 
 public class Pop3 {
 
-    static void displayMail(String host, String storageType, String username, String password) throws Exception {
-        Properties properties = new Properties();
-        properties.put("mail.pop3.host", host);
-        properties.put("mail.pop3.port", "995");
-        properties.put("mail.pop3.starttls.enable", "true");
+    public static void main(String[] args) throws Exception {
+        Properties props = System.getProperties();
+        props.put("mail.pop3.host", "pop.gmail.com");
+        props.put("mail.pop3.port", "995");
+        props.put("mail.pop3.starttls.enable", "true");
 
-        Session session = Session.getDefaultInstance(properties);
+        Session session = Session.getDefaultInstance(props);
+
         Store store = session.getStore("pop3s");
-        store.connect(host, username, password);
+        String hostname = "pop.gmail.com",
+                username = "abc@gmail.com",
+                password = "password123";
+        store.connect(hostname, username, password);
 
         Folder folder = store.getFolder("INBOX");
         folder.open(Folder.READ_ONLY);
 
-        Message messages[] = folder.getMessages();
+        Message[] messages = folder.getMessages();
         int recent = messages.length - 1;
 
         Message recentMessage = messages[recent];
@@ -27,13 +31,5 @@ public class Pop3 {
 
         folder.close();
         store.close();
-    }
-
-    public static void main(String[] args) throws Exception {
-        String host = "pop.gmail.com";
-        String storageType = "pop3";
-        String username = "abc@gmail.com";
-        String password = "";
-        displayMail(host, storageType, username, password);
     }
 }
