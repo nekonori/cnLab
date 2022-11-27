@@ -12,7 +12,7 @@ class DNSServer {
             String s = str.trim();
             InetAddress addr = receiver.getAddress();
             int port = receiver.getPort();
-            sendbyte = InetAddress.getByName(s).toString().getBytes();
+            sendbyte = InetAddress.getByName(s).getHostAddress().getBytes();
             DatagramPacket sender = new DatagramPacket(sendbyte, sendbyte.length, addr, port);
             server.send(sender);
             break;
