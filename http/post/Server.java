@@ -3,19 +3,20 @@ import java.net.*;
 import java.util.*;
 
 public class Server {
-    static String getReq(String urlString) throws Exception {
+    static void getReq(String urlString, String data, PrintWriter clientOut) throws Exception {
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
+        con.setDoOutput(true);
+        con.getOutputStream().write(data.getBytes());
         int responseCode = con.getResponseCode();
-        System.out.println("Response code: " + responseCode);
-        StringBuilder res = new StringBuilder();
+        clientOut.println("Response code - " + responseCode + "\n");
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            Scanner in = new Scanner(new InputStreamReader(con.getInputStream()));
-            while (in.hasNextLine())
-                res.append(in.nextLine());
+            Scanner responseIn = new Scanner(new InputStreamReader(con.getInputStream()));
+            while (responseIn.hasNextLine()) {
+                clientOut.println(responseIn.nextLine());
+            }
         }
-        return res.toString();
     }
 
     public static void main(String[] args) throws Exception {
@@ -23,9 +24,9 @@ public class Server {
         Socket client = ss.accept();
         PrintWriter out = new PrintWriter(client.getOutputStream(), true);
         Scanner in = new Scanner(new InputStreamReader(client.getInputStream()));
-        String url = in.next();
-        System.out.println(url);
-        out.println(getReq(url));
+        String url = in.next(),
+                data = in.next();
+        getReq(url, data, out);
         ss.close();
     }
 }

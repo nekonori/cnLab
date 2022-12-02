@@ -9,10 +9,16 @@ public class Client {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         Scanner in = new Scanner(new InputStreamReader(clientSocket.getInputStream()));
         System.out.print("URL>>");
-        String url = sc.next();
+        String url = sc.nextLine();
         out.println(url);
-        String res = in.nextLine();
-        System.out.println("GET Resoponse:\n" + res);
+        System.out.println("Enter POST data seperated by '&'\nE.g. 'name=alice&age=12'");
+        System.out.print("POST data>>");
+        String postData = sc.nextLine();
+        out.println(postData);
+        String resCode = in.nextLine();
+        System.out.println(resCode);
+        while (in.hasNextLine())
+            System.out.println(in.nextLine());
         clientSocket.close();
     }
 }
